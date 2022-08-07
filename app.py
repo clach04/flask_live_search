@@ -7,6 +7,7 @@ https://www.youtube.com/watch?v=Us8gBacBDJ8
 but without errors ;-) and plain text for simple demo setup
 """
 
+import flask
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -47,5 +48,5 @@ if __name__ == "__main__":
     protocol = 'http'
     if flask_config.get('ssl_context'):
         protocol = 'https'
-    print('Serving on %s://%s:%d' % (protocol, flask_config['host'], flask_config['port']))
+    print('Flask %s Serving on %s://%s:%d' % (flask.__version__, protocol, flask_config['host'], flask_config['port']))
     app.run(**flask_config)
