@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flask jQuery ajax Live Search</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
     <script>
 
         var timeout = null;  // debounce timeout
@@ -16,13 +13,18 @@
             var live_results = document.getElementById("datalist");
 
             function show_live_results(res) {
-                // only jquery remaining
+                // backwards compat for loop, rather than ES5 forEach()
+                //console.log('show_live_results:: ' + res);
+                var res_length = res.length;
+                //console.log('show_live_results LENGTH:: ' + res_length);
+                //console.log('[0]' + res[0]);
                 var data = "<div class='list-group'>";
-                $.each(res,function(index,value){
-                    data += "<p class='list-group-item list-group-item-action'>"+value+"</p>";
-                });
+                for (var i = 0; i < res_length; i++) {
+                    //console.log('XX' + res[i]);
+                    data += "<p class='list-group-item list-group-item-action'>" + res[i] + "</p>";
+                }
                 data += "</div>";
-                $("#datalist").html(data);
+                live_results.innerHTML = data;
             }
 
             live_search_box.addEventListener('keyup', function (e) {
@@ -33,7 +35,7 @@
 
                 // Make a new timeout set to go off delay_time ms
                 timeout = setTimeout(function () {
-                    console.log('Input Value:', live_search_box.value);
+                    //console.log('Input Value:', live_search_box.value);
 
                     live_results.innerHTML = "";  // remove children
 
