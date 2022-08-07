@@ -15,6 +15,16 @@
             var live_search_box = document.getElementById("livebox");
             var live_results = document.getElementById("datalist");
 
+            function show_live_results(res) {
+                // only jquery remaining
+                var data = "<div class='list-group'>";
+                $.each(res,function(index,value){
+                    data += "<p class='list-group-item list-group-item-action'>"+value+"</p>";
+                });
+                data += "</div>";
+                $("#datalist").html(data);
+            }
+
             live_search_box.addEventListener('keyup', function (e) {
                 // Clear the timeout if it has already been set.
                 // This will prevent the previous task from executing
@@ -26,21 +36,10 @@
                     console.log('Input Value:', live_search_box.value);
 
                     live_results.innerHTML = "";  // remove children
-                    // jquery code start
-                    $.ajax({
-                        method:"post",
-                        url:"/livesearch",
-                        data:{text:$("#livebox").val()},
-                        success:function(res){
-                            var data = "<div class='list-group'>";
-                            $.each(res,function(index,value){
-                                data += "<p class='list-group-item list-group-item-action'>"+value+"</p>";
-                            });
-                            data += "</div>";
-                            $("#datalist").html(data);
-                        }
-                    });
-                    // jquery code end
+
+                    fetch('/livesearch', {method:"post", method:"post", cache: 'no-cache', body: JSON.stringify({text:live_search_box.value})})
+                      .then((response) => response.json())
+                      .then((data) => show_live_results(data));
 
                 }, delay_time);
             });
