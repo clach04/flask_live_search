@@ -7,6 +7,7 @@ https://www.youtube.com/watch?v=Us8gBacBDJ8
 but without errors ;-) and plain text for simple demo setup
 """
 
+import codecs
 import json
 import sys
 
@@ -16,7 +17,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 live_search_entries = []
-f = open('entry_per_line_utf8.txt', encoding='utf8')
+f = codecs.open('entry_per_line_utf8.txt', encoding='utf8')
 for line in f:
     line = line.strip()
     if line:

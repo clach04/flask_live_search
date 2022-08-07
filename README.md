@@ -7,9 +7,11 @@ Technique adopted from https://tutorial101.blogspot.com/2020/11/flask-mysql-jque
 ## Setup
 
     python -m pip install flask
+    python app.py
 
 Known to work with Flask versions:
 
+  * Flask 1.0.2
   * Flask 1.1.2
   * Flask 2.2.1
 
