@@ -8,30 +8,51 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
     <script>
-        $(document).ready(function(){
-            $("#livebox").on("input",function(e){
-                $("#datalist").empty();
-                $.ajax({
-                    method:"post",
-                    url:"/livesearch",
-                    data:{text:$("#livebox").val()},
-                    success:function(res){
-                        var data = "<div class='list-group'>";
-                        $.each(res,function(index,value){
-                            data += "<p class='list-group-item list-group-item-action'>"+value+"</p>";
-                        });
-                        data += "</div>";
-                        $("#datalist").html(data);
-                    }
-                });
+
+        var timeout = null;  // debounce timeout
+        function enable_live_search() {
+            var delay_time = 200; // 200 millsecs, 0.2 secs
+            var live_search_box = document.getElementById("livebox");
+            var live_results = document.getElementById("datalist");
+
+            live_search_box.addEventListener('keyup', function (e) {
+                // Clear the timeout if it has already been set.
+                // This will prevent the previous task from executing
+                // if it has been less than <MILLISECONDS>
+                clearTimeout(timeout);
+
+                // Make a new timeout set to go off delay_time ms
+                timeout = setTimeout(function () {
+                    console.log('Input Value:', live_search_box.value);
+
+                    live_results.innerHTML = "";  // remove children
+                    // jquery code start
+                    $.ajax({
+                        method:"post",
+                        url:"/livesearch",
+                        data:{text:$("#livebox").val()},
+                        success:function(res){
+                            var data = "<div class='list-group'>";
+                            $.each(res,function(index,value){
+                                data += "<p class='list-group-item list-group-item-action'>"+value+"</p>";
+                            });
+                            data += "</div>";
+                            $("#datalist").html(data);
+                        }
+                    });
+                    // jquery code end
+
+                }, delay_time);
             });
-        });
+        }
+
         function form_setfocus() {
             document.getElementById("livebox").focus();
         }
 
         function init() {
             form_setfocus();
+            enable_live_search();
         }
 
         window.onload = init; /* <body onload="init()"> */
