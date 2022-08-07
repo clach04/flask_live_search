@@ -28,11 +28,19 @@ print('Total entries %r' % len(live_search_entries))
 def index():
     return render_template("livesearch.html")
      
-@app.route("/livesearch", methods=["POST","GET"])
+@app.route("/livesearch", methods=["POST", "GET"])
 def livesearch():
-    term = request.form.get("text")
+    #print(request.args.to_dict())
+    #print(request.get_json(force=True))
+    #print(request.form.to_dict())
+    term = (request.args or {}).get('text') or (request.get_json(force=True) or {}).get('text') or (request.form or {}).get("text")
     print('term: %r' % term)
-    result = [v for v in live_search_entries if term in v]
+    if not term:
+        # fixme error handling
+        print('fixme error handling')
+        result = []
+    else:
+        result = [v for v in live_search_entries if term in v]
     print('Entries returned %r for %r' % (len(result), term))
     #return jsonify(result)  # Microsoft Edge warnings https://github.com/pallets/flask/pull/4752
     resp = flask.Response(response=json.dumps(result),
