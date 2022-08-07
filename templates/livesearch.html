@@ -26,6 +26,15 @@
                 });
             });
         });
+        function form_setfocus() {
+            document.getElementById("livebox").focus();
+        }
+
+        function init() {
+            form_setfocus();
+        }
+
+        window.onload = init; /* <body onload="init()"> */
     </script> 
 </head>
 <body>
