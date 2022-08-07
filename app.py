@@ -14,14 +14,14 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-games = []
+live_search_entries = []
 f = open('entry_per_line_utf8.txt', encoding='utf8')
 for line in f:
     line = line.strip()
     if line:
-        games.append(line.lower())
+        live_search_entries.append(line.lower())
 f.close()
-print('Total entries %r' % len(games))
+print('Total entries %r' % len(live_search_entries))
  
 @app.route("/")
 def index():
@@ -31,7 +31,7 @@ def index():
 def livesearch():
     term = request.form.get("text")
     print('term: %r' % term)
-    result = [v for v in games if term in v]
+    result = [v for v in live_search_entries if term in v]
     print('Entries returned %r for %r' % (len(result), term))
     return jsonify(result)
 
