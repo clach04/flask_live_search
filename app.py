@@ -17,6 +17,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 live_search_entries = []
+# TODO filename from env variable
 f = codecs.open('entry_per_line_utf8.txt', encoding='utf8')
 for line in f:
     line = line.strip()
@@ -36,8 +37,11 @@ def livesearch():
     #print(request.form.to_dict())
     term = (request.args or {}).get('text') or (request.get_json(force=True) or {}).get('text') or (request.form or {}).get("text")
     print('term: %r' % term)
+    if term is not None:
+        term = term.strip()
+        term = term.lower()
     if not term:
-        # fixme error handling
+        # fixme error handling - or return everything, probably better option... or option on URL to dictate empty versus full result set
         print('fixme error handling')
         result = []
     else:
