@@ -20,7 +20,7 @@ Known to work with Flask versions:
   * Flask 1.1.2
   * Flask 2.2.1
 
-Front end uses Bootstrap (CSS only) and pure Javascript (not other dependencies).
+Front end uses Bootstrap (CSS only, v3.3-5.2 tested) and pure Javascript (no other dependencies).
 
 ## Demo
 
