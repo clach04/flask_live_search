@@ -9,6 +9,7 @@ but without errors ;-) and plain text for simple demo setup
 
 import codecs
 import json
+import os
 import sys
 
 import flask
@@ -18,7 +19,7 @@ app = Flask(__name__)
 
 live_search_entries = []
 # TODO filename from env variable
-f = codecs.open('entry_per_line_utf8.txt', encoding='utf8')
+f = codecs.open(os.environ.get('LIVE_SEARCH_ENTRIES_FILENAME', 'entry_per_line_utf8.txt'), encoding='utf8')
 for line in f:
     line = line.strip()
     if line:

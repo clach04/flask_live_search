@@ -7,7 +7,6 @@ Technique adopted from https://tutorial101.blogspot.com/2020/11/flask-mysql-jque
 ## Setup
 
     python -m pip install flask
-    python app.py
 
 Known to work with Python versions:
 
@@ -22,3 +21,18 @@ Known to work with Flask versions:
   * Flask 2.2.1
 
 Front end uses Bootstrap (CSS only) and pure Javascript (not other dependencies).
+
+## Demo
+
+Default:
+
+    python app.py
+
+Specify different input text file for search demo (UNIX/Linux):
+
+    env LIVE_SEARCH_ENTRIES_FILENAME=alternative_filename.txt python app.py
+
+Specify different input text file for search demo (Microsoft Windows):
+
+    set LIVE_SEARCH_ENTRIES_FILENAME=alternative_filename.txt
+    python app.py
