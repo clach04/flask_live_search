@@ -16,6 +16,7 @@
         function enable_live_search() {
             var delay_time = 200; // 200 millsecs, 0.2 secs
             var live_search_box = document.getElementById("livebox");
+            var live_search_box_fts = document.getElementById("livebox_fts");
             var live_results = document.getElementById("datalist");
 
             function show_live_results(res) {
@@ -51,6 +52,25 @@
 
                 }, delay_time);
             });
+
+            live_search_box_fts.addEventListener('keyup', function (e) {
+                // Clear the timeout if it has already been set.
+                // This will prevent the previous task from executing
+                // if it has been less than <MILLISECONDS>
+                clearTimeout(timeout);
+
+                // Make a new timeout set to go off delay_time ms
+                timeout = setTimeout(function () {
+                    //console.log('Input Value:', live_search_box_fts.value);
+
+                    live_results.innerHTML = "";  // remove children
+
+                    fetch('/livesearch', {method:"post", method:"post", cache: 'no-cache', body: JSON.stringify({text:live_search_box_fts.value, fts:true})})
+                      .then((response) => response.json())
+                      .then((data) => show_live_results(data));
+
+                }, delay_time);
+            });
         }
 
         function form_setfocus() {
@@ -69,9 +89,13 @@
     <div class="container">
         <br/>
         <p><h2>Flask ajax Live Search</h2></p>
+        Text Search
         <input type="text" id="livebox" name="text" class="form-control" placeholder="Find entry" autocomplete="off">
         <!-- dumb spacing hack... --></br></br></br></br>
         <div id="datalist"></div>
+        <!-- dumb spacing hack... --></br></br></br></br>
+        Full Text Search
+        <input type="text" id="livebox_fts" name="text_fts" class="form-control" placeholder="Find entry" autocomplete="off">
     </div>
 </body>
 </html>

@@ -38,8 +38,8 @@ def livesearch():
     #print(request.form.to_dict())
     request_args = request.args or {}
     request_form = request.form or {}
-    #request_json = request.get_json(force=True) or {}  # how to handle errors, when force true applied
-    request_json = request.get_json() or {}
+    request_json = request.get_json(force=True) or {}  # how to handle errors, when force true applied
+    #request_json = request.get_json() or {} # Need true for POST from web page to work
     term = (request_args or {}).get('text') or (request.get_json(force=True) or {}).get('text') or (request_form or {}).get("text")
     print('raw term: %r' % term)
     if term is not None:
@@ -55,10 +55,11 @@ def livesearch():
         fts = request_args.get('fts') or request_form.get("fts")  or request_json.get('fts')
         print('fts: %r' % fts)
         if fts is not None:
-            fts = fts.strip()
-            fts = fts.lower()
+            if isinstance(fts, (str, bytes)):
+                fts = fts.strip()
+                fts = fts.lower()
         if fts:
-            result = []  # TODO
+            result = ["au : australia",]  # TODO
         else:
             # not FTS
             result = [v for v in live_search_entries if term in v]
