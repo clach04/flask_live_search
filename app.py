@@ -10,12 +10,26 @@ but without errors ;-) and plain text for simple demo setup
 import codecs
 import json
 import os
+import sqlite3  # TODO make optional?
 import sys
 
 import flask
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
+
+index_location = ':memory:'
+#db = sqlite3.connect(index_location)
+db = sqlite3.connect(index_location, check_same_thread=False)  # sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id -1212130624 and this is thread id -1239499968.
+cur = db.cursor()
+cur.execute('pragma compile_options;')
+available_pragmas = cur.fetchall()
+
+if ('ENABLE_FTS5',) not in available_pragmas:
+    raise NotImplementedError('FTS5 missing %r' % (available_pragmas, ) )
+cur.execute("CREATE VIRTUAL TABLE lines USING fts5(line, tokenize='porter')")
+
+# TODO close...
 
 live_search_entries = []
 # TODO filename from env variable
@@ -24,7 +38,9 @@ for line in f:
     line = line.strip()
     if line:
         live_search_entries.append(line.lower())
+        cur.execute("""INSERT INTO lines (line) VALUES (?)""", (line, ) )
 f.close()
+db.commit()
 print('Total entries %r' % len(live_search_entries))
  
 @app.route("/")
@@ -38,7 +54,7 @@ def livesearch():
     #print(request.form.to_dict())
     request_args = request.args or {}
     request_form = request.form or {}
-    request_json = request.get_json(force=True) or {}  # how to handle errors, when force true applied
+    request_json = request.get_json(force=True, silent=True) or {}  # how to handle errors, when force true applied
     #request_json = request.get_json() or {} # Need true for POST from web page to work
     term = (request_args or {}).get('text') or (request.get_json(force=True) or {}).get('text') or (request_form or {}).get("text")
     print('raw term: %r' % term)
@@ -60,6 +76,15 @@ def livesearch():
                 fts = fts.lower()
         if fts:
             result = ["au : australia",]  # TODO
+            """
+            sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread. The object was created in thread id -1212130624 and this is thread id -1239499968.
+            """
+            cur.execute("""SELECT
+                                line
+                            FROM lines(?)
+                            ORDER  BY rank""",
+                            (term, ) )
+            result = [v[0] for v in cur.fetchall()]
         else:
             # not FTS
             result = [v for v in live_search_entries if term in v]
