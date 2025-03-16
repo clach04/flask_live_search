@@ -1,6 +1,6 @@
 # flask_live_search
 
-Python and Javascript for live search (not autocomplete)
+Python and Javascript for live search (not autocomplete, for [OpenSearch](https://github.com/dewitt/opensearch) [suggestions](https://github.com/dewitt/opensearch/blob/master/mediawiki/Specifications/OpenSearch/Extensions/Suggestions/1.1/Draft%201.wiki) see [pyopensearch](https://hg.sr.ht/~clach04/pyopensearch))
 
 Technique adopted from https://tutorial101.blogspot.com/2020/11/flask-mysql-jquery-ajax-live-search.html
 
