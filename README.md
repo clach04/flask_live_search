@@ -28,6 +28,8 @@ Default:
 
     python app.py
 
+which will load into memory the contents of the file entry_per_line_utf8.txt (sample file contains 2-letter short code and country name mapping)
+
 Specify different input text file for search demo (UNIX/Linux):
 
     env LIVE_SEARCH_ENTRIES_FILENAME=alternative_filename.txt python app.py
