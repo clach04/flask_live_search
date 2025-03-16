@@ -38,3 +38,5 @@ Specify different input text file for search demo (Microsoft Windows):
 
     set LIVE_SEARCH_ENTRIES_FILENAME=alternative_filename.txt
     python app.py
+
+Then open web browser and start typing, e.g. "au".
